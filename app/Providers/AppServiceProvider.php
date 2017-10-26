@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        date_default_timezone_set('Europe/Paris');
+        Carbon::setLocale('fr');
     }
 
     /**

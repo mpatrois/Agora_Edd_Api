@@ -112,6 +112,9 @@ class TerminalController extends Controller
             case Question::QU_WHAT_PLACE:      return $this->setPlace($request);break;
             case Question::QU_MAKE_SMILE:      return $this->setPhoto($request);break;
             case Question::QU_HOW_CAN_I_HELP:  return $this->makeChoice($request);break;
+            case Question::QU_SKILLS_WANTED:   return $this->selectSkills($request);break;
+            case Question::QU_SKILLS_POSTED:   return $this->postSkills($request);break;
+            case Question::QU_PEOPLE_SKILLS_WANTED:   return $this->choosePeople($request);break;
             // case Question::QU_HOW_CAN_I_HELP:  return $this->setPlace($request);break;
         }
         return $this->initChatBot($request);
@@ -130,9 +133,10 @@ class TerminalController extends Controller
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
             'key'      => Question::QU_WHATS_YOUR_NAME,
+            'key_name' => "QU_WHATS_YOUR_NAME",
+            'type'     => "TEXT",
             'bubbles'  => [
                 [
-                    'type' => "TEXT",
                     'content' => "Salut, je suis Edd! Je suis là pour faciliter les échanges et les rencontres dans cet espace. Comment t'appelles tu ?"
                 ]
 
@@ -145,7 +149,7 @@ class TerminalController extends Controller
         $user = User::find($request->user_id);
         $terminal = Terminal::find($request->terminal_id);
         
-        $user->fill($request->all());
+        $user->username = $request->response_data;//String
         $user->save();
         
         return [
@@ -153,13 +157,13 @@ class TerminalController extends Controller
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
             'key'      => Question::QU_HOW_MANY_HOURS,
+            'key_name' => "QU_HOW_MANY_HOURS",
+            'type'     => "PROGRESS",
             'bubbles'  => [
                 [
-                    'type' => "TEXT",
-                    'content' => "Bienvenu à toi $user->username !"
+                    'content' => "Bienvenue à toi $user->username !"
                 ],
                 [
-                    'type' => "PROGRESS",
                     'content' => "Combien de temps resteras tu dans cet espace ?"
                 ]
             ]
@@ -170,29 +174,28 @@ class TerminalController extends Controller
         $user = User::find($request->user_id);
         $terminal = Terminal::find($request->terminal_id);
         
-        $user->updateUserStopTime($request->nb_minutes);
+        $user->updateUserStopTime($request->response_data);//Integer nbMinutes
 
         return [
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
             "key"      => Question::QU_WHAT_PLACE,
+            "key_name" => "QU_WHAT_PLACE",
+            'type'     => "SELECT",
+            'options' => [
+                '1 er étage',
+                '2 ème étage',
+                'Table 1',
+                'Table 2',
+                'Space X',
+            ],
             'bubbles'  => [
                 [
-                    'type' => "TEXT",
-                    'content' => "$request->nb_minutes minutes ! Vraiment pas mal !",
-                    'options' => []
+                    'content' => "$request->response_data minutes ! Vraiment pas mal !",
                 ],
                 [
-                    'type' => "SELECT",
                     'content' => "Dans quelle zone peut-on te trouver ?",
-                    'options' => [
-                        '1 er étage',
-                        '2 ème étage',
-                        'Table 1',
-                        'Table 2',
-                        'Space X',
-                    ]
                 ]
             ]
         ];
@@ -202,18 +205,21 @@ class TerminalController extends Controller
         $user = User::find($request->user_id);
         $terminal = Terminal::find($request->terminal_id);
         
-        $user->updateUserPlace($request->place);
+        $user->updateUserPlace($request->response_data);//String name place
         
         return [
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
             "key"      => Question::QU_MAKE_SMILE,
+            "key_name" => "QU_MAKE_SMILE",
+            'type' => "TEXT",
             'bubbles'  => [
                 [
-                    'type' => "TEXT",
+                    'content' => "C'est noté ! Et maintenant...",
+                ],
+                [
                     'content' => "Fais nous ton plus beau sourire !",
-                    'options' => []
                 ]
             ]
         ];
@@ -228,20 +234,24 @@ class TerminalController extends Controller
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
             "key"      => Question::QU_HOW_CAN_I_HELP,
+            "key_name" => "QU_HOW_CAN_I_HELP",
+            'type'     => "SELECT",
+            'options' => [
+                [
+                    'option_id'=> Question::QU_OPTION_SEARCH_SKILLS,
+                    'name' => 'Je recherche des compétences',
+                ],
+                [
+                    'option_id'=> Question::QU_OPTION_POST_SKILLS,
+                    'name' => 'Je partage mes compétences',
+                ],
+            ],
             'bubbles'  => [
                 [
-                    'type' => "SELECT",
-                    'content' => "Comment puis-je t'aider ?",
-                    'options' => [
-                        [
-                            'option_id'=> 1,
-                            'name' => 'Je recherche des compétences',
-                        ],
-                        [
-                            'option_id'=> 2,
-                            'name' => 'Je partage mes compétences',
-                        ],
-                    ]
+                    'content' => "Ta photo est enregistrée dans l'appareil jusqu'à que tu t'en ailles",
+                ]
+                ,[
+                    'content' => "Passons aux choses sérieuses, comment puis-je t'aider ?",
                 ]
             ]
         ];
@@ -251,28 +261,98 @@ class TerminalController extends Controller
         $user = User::find($request->user_id);
         $terminal = Terminal::find($request->terminal_id);
         
+        if($request->response_data == Question::QU_OPTION_SEARCH_SKILLS ){
+
+            return [
+                'user'        => $user,
+                'terminal'    => $terminal,
+                'session'     => $user->currentTerminal()->pivot,
+                "key"         => Question::QU_SKILLS_WANTED,
+                "key_name"    => "QU_SKILLS_WANTED",
+                'type'        => "SEARCH",
+                'uri'         => 'api/searchCompetences',
+                'name_search' => 'search_skill',
+                'bubbles'  => [
+                    [
+                        'content' => "Quelle compétence cherches-tu ? Tape quelques lettres pour trouver ce dont tu as besoin !",
+                    ]
+                ]
+            ];
+
+        }
+        else if($request->response_data == Question::QU_OPTION_POST_SKILLS){
+
+            return [
+                'user'              => $user,
+                'terminal'          => $terminal,
+                'session'           => $user->currentTerminal()->pivot,
+                "key"               => Question::QU_SKILLS_POSTED,
+                "key_name"          => "QU_SKILLS_POSTED",
+                'type'              => "SEARCH",
+                'uri'               => 'api/searchCompetences',
+                'name_search_field' => 'search_skill',
+                'bubbles'  => [
+                    [
+                        'content' => "Quelle compétences a tu ? Tape quelques lettres pour trouver ce dont tu es fait !",
+                    ]
+                ]
+            ];
+
+        }
+
+        
+    }
+
+    public function selectSkills(Request $request){
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+
+        // return 
+
         return [
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            "key"      => Question::QU_HOW_CAN_I_HELP,
+            "key"      => Question::QU_PEOPLE_SKILLS_WANTED,
+            "key_name" => "QU_PEOPLE_SKILLS_WANTED",
+            'type'     => "SELECT",
+            'options'  => $terminal->getUsersAvailableBySkills($request->response_data),
             'bubbles'  => [
                 [
-                    'type' => "SELECT",
-                    'content' => "Comment puis-je t'aider ?",
-                    'options' => [
-                        [
-                            'option_id'=> 1,
-                            'name' => 'Je recherche des compétences',
-                        ],
-                        [
-                            'option_id'=> 2,
-                            'name' => 'Je partage mes compétences',
-                        ],
-                    ]
+                    'content' => "Voici une liste de personnes qui peuvent t'interesser !",
+                ]
+            ]
+            
+        ];
+
+
+    }
+    
+    public function choosePeople(Request $request){
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+
+        $userToTalk = User::find($request->response_data);
+        $userToTalk->session = $userToTalk->currentTerminal()->pivot;
+
+        return [
+            'user'     => $user,
+            'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
+            "key"      => Question::QU_PEOPLE_SKILLS_WANTED,
+            "key_name" => "QU_PEOPLE_SKILLS_WANTED",
+            'type'     => "SELECT",
+            'options' => $terminal->getUsersAvailableBySkills($request->response_data),
+            'bubbles'  => [
+                [
+                    'content' => "Voici $user->username ! tu peux aller lui parler, il se trouve à cet endroit : $userToTalk->session->place",
                 ]
             ]
         ];
+    }
+    
+    public function postSkills(Request $request){
+        
     }
 
     public function searchCompetences(Request $request){

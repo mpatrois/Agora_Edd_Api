@@ -24,23 +24,61 @@ class DatabaseSeeder extends Seeder
         Skill::create(['name' => 'Mathématiques',]);
         Skill::create(['name' => 'C++',]);
         Skill::create(['name' => 'Vente de te-shi sisi',]);
+        Skill::create(['name' => 'Ski',]);
+        Skill::create(['name' => 'Graffiti',]);
+        Skill::create(['name' => 'Massage avec happy-ending',]);
         
-        $node = Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
-        $bu   = Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
+        Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
+        Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
 
-        $bram = User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse']);
-        $manu = User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse']);
+        
 
-        foreach(Skill::all() as $skill){
-            $manu->skills()->save($skill);
-            $bram->skills()->save($skill);
+        User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse']);
+        User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse']);
+        User::create(['username' => 'Valentin Dupond', 'password' => 'motdepasse']);
+        User::create(['username' => 'Yann Bertrand', 'password' => 'motdepasse']);
+        User::create(['username' => 'Florence Dubosc', 'password' => 'motdepasse']);
+        User::create(['username' => 'Yannick Tamers-Lachiaine', 'password' => 'motdepasse']);
+        User::create(['username' => 'Popeye', 'password' => 'motdepasse']);
+        User::create(['username' => 'Cristhopher Wallace', 'password' => 'motdepasse']);
+
+        $faker = Faker\Factory::create();
+
+        for ($i=0; $i < 10 ; $i++) {
+            Terminal::create(['name' => $faker->company, 'password' => 'motdepasse']);
         }
 
-        $dateStart = Carbon::create()->toDateTimeString();
-        $dateEnd = Carbon::create()->addHour(2)->toDateTimeString();
+        for ($i=0; $i < 50 ; $i++) {
+            User::create(['username' => $faker->name, 'password' => 'motdepasse']);
+        }
 
-        $bram->terminals()->attach($node->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
-        $manu->terminals()->attach($bu->id,  ['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => '2ème étage' ]);
+        // foreach(Skill::all() as $skill){
+        //     $manu->skills()->save($skill);
+        //     $bram->skills()->save($skill);
+        // }
+
+        foreach(User::all() as $user){
+
+            $randTerminal = Terminal::orderBy(DB::raw('RAND()'))->first();
+
+            $dateStart = Carbon::now();
+            $dateEnd = Carbon::create()->addHour(2)->toDateTimeString();
+
+            $user->terminals()->attach($randTerminal->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
+            
+            for ($i=0; $i < rand(1,4) ; $i++) { 
+                $randSkill = Skill::orderBy(DB::raw('RAND()'))->first();
+                $user->skills()->save($randSkill);
+            }
+
+
+        }
+
+        // $dateStart = Carbon::now();
+        // $dateEnd = Carbon::create()->addHour(2)->toDateTimeString();
+
+        // $bram->terminals()->attach($node->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
+        // $manu->terminals()->attach($bu->id,  ['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => '2ème étage' ]);
         
         // const QU_WHATS_YOUR_NAME = 1;
         // const QU_HOW_MANY_HOURS  = 2;
