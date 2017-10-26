@@ -22,10 +22,10 @@ class CreateUserTerminalTable extends Migration
             $table->integer('terminal_id')->unsigned();
             $table->foreign('terminal_id')->references('id')->on('terminals');
 
-            $table->dateTime('start_time');
-            $table->dateTime('stop_time');
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('stop_time')->nullable();
             
-            $table->string('place');
+            $table->string('place')->nullable();
             
             // $table->timestamps();
             

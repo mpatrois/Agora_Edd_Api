@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
         $node = Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
         $bu   = Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
 
-        $bram = User::create(['first_name' => 'Bram','last_name' => 'Bram Van Osta', 'password' => 'motdepasse']);
-        $manu = User::create(['first_name' => 'Manu','last_name' => 'Patrois', 'password' => 'motdepasse']);
+        $bram = User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse']);
+        $manu = User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse']);
 
         foreach(Skill::all() as $skill){
             $manu->skills()->save($skill);
@@ -40,11 +40,36 @@ class DatabaseSeeder extends Seeder
         $bram->terminals()->attach($node->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
         $manu->terminals()->attach($bu->id,  ['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => '2ème étage' ]);
         
-        
-        
-        // Question::create();
+        // const QU_WHATS_YOUR_NAME = 1;
+        // const QU_HOW_MANY_HOURS  = 2;
+        // const QU_WHAT_PLACE = 3;
+        // const QU_MAKE_SMILE = 4;
+        // const QU_HOW_CAN_I_HELP = 5;
 
+        // Question::create([
+        //     'id' => Question::QU_WHATS_YOUR_NAME,
+        //     'content' => "Salut, je suis Edd! Comment t'appelles tu ?"
+        // ]);
+        
+        // Question::create([
+        //     'id' => Question::QU_HOW_MANY_HOURS,
+        //     'content' => "Combien de temps restes tu ?"
+        // ]);
+        
+        // Question::create([
+        //     'id' => Question::QU_WHAT_PLACE,
+        //     'content' => "A quel endroit ?"
+        // ]);
+        
+        // Question::create([
+        //     'id' => Question::QU_MAKE_SMILE,
+        //     'content' => "Fais nous ton plus beau sourire !"
+        // ]);
 
+        // Question::create([
+        //     'id' => Question::QU_HOW_CAN_I_HELP,
+        //     'content' => "Comment puis-je t'aider ?"
+        // ]);
 
     }
 }

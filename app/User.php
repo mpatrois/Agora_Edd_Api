@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username'
     ];
 
     /**
@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'created_at', 'updated_at'
     ];
 
 
@@ -33,7 +33,7 @@ class User extends Authenticatable
     }
 
     public function terminals(){
-        return $this->belongsToMany('App\Terminal', 'user_terminal', 'terminal_id', 'user_id');
+        return $this->belongsToMany('App\Terminal', 'user_terminal','user_id','terminal_id');
     }
 
 }

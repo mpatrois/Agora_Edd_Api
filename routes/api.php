@@ -23,3 +23,5 @@ Route::resource('users', 'UserController');
 Route::resource('terminals', 'TerminalController');
 
 Route::resource('skills', 'SkillController');
+
+Route::post('chatBot', 'TerminalController@chatBot');
