@@ -13,4 +13,7 @@ class Terminal extends Model
     // {
     //     return $this->belongsToMany('App\User', 'user_terminal','user_id','terminal_id');
     // }
+
+ 
+
 }

@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
         Skill::create(['name' => 'Droit des affaires',]);
         Skill::create(['name' => 'Physique-Chimie',]);
         Skill::create(['name' => 'Mathématiques',]);
+        Skill::create(['name' => 'C++',]);
+        Skill::create(['name' => 'Vente de te-shi sisi',]);
         
         $node = Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
         $bu   = Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);

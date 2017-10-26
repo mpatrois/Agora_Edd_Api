@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Terminal;
 use App\Question;
 use App\User;
+use App\Skill;
 use Carbon\Carbon;
+
 
 class TerminalController extends Controller
 {
@@ -109,6 +111,7 @@ class TerminalController extends Controller
             case Question::QU_HOW_MANY_HOURS:  return $this->setHours($request);break;
             case Question::QU_WHAT_PLACE:      return $this->setPlace($request);break;
             case Question::QU_MAKE_SMILE:      return $this->setPhoto($request);break;
+            case Question::QU_HOW_CAN_I_HELP:  return $this->makeChoice($request);break;
             // case Question::QU_HOW_CAN_I_HELP:  return $this->setPlace($request);break;
         }
         return $this->initChatBot($request);
@@ -130,7 +133,7 @@ class TerminalController extends Controller
             'bubbles'  => [
                 [
                     'type' => "TEXT",
-                    'content' => "Salut, je suis Edd! Comment t'appelles tu ?"
+                    'content' => "Salut, je suis Edd! Je suis là pour faciliter les échanges et les rencontres dans cet espace. Comment t'appelles tu ?"
                 ]
 
             ]
@@ -152,8 +155,12 @@ class TerminalController extends Controller
             'key'      => Question::QU_HOW_MANY_HOURS,
             'bubbles'  => [
                 [
+                    'type' => "TEXT",
+                    'content' => "Bienvenu à toi $user->username !"
+                ],
+                [
                     'type' => "PROGRESS",
-                    'content' => "Combien de temps restes tu ?"
+                    'content' => "Combien de temps resteras tu dans cet espace ?"
                 ]
             ]
         ];
@@ -172,13 +179,19 @@ class TerminalController extends Controller
             "key"      => Question::QU_WHAT_PLACE,
             'bubbles'  => [
                 [
+                    'type' => "TEXT",
+                    'content' => "$request->nb_minutes minutes ! Vraiment pas mal !",
+                    'options' => []
+                ],
+                [
                     'type' => "SELECT",
-                    'content' => "A quel endroit ?",
+                    'content' => "Dans quelle zone peut-on te trouver ?",
                     'options' => [
                         '1 er étage',
                         '2 ème étage',
                         'Table 1',
                         'Table 2',
+                        'Space X',
                     ]
                 ]
             ]
@@ -220,12 +233,50 @@ class TerminalController extends Controller
                     'type' => "SELECT",
                     'content' => "Comment puis-je t'aider ?",
                     'options' => [
-                        'Je recherche des compétences',
-                        'Je propose mes compétences',
+                        [
+                            'option_id'=> 1,
+                            'name' => 'Je recherche des compétences',
+                        ],
+                        [
+                            'option_id'=> 2,
+                            'name' => 'Je partage mes compétences',
+                        ],
                     ]
                 ]
             ]
         ];
+    }
+    
+    private function makeChoice(Request $request){
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+        
+        return [
+            'user'     => $user,
+            'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
+            "key"      => Question::QU_HOW_CAN_I_HELP,
+            'bubbles'  => [
+                [
+                    'type' => "SELECT",
+                    'content' => "Comment puis-je t'aider ?",
+                    'options' => [
+                        [
+                            'option_id'=> 1,
+                            'name' => 'Je recherche des compétences',
+                        ],
+                        [
+                            'option_id'=> 2,
+                            'name' => 'Je partage mes compétences',
+                        ],
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    public function searchCompetences(Request $request){
+        return Skill::where('name','LIKE',"%$request->search_skill%")->limit(5)->get();
     }
 
     
