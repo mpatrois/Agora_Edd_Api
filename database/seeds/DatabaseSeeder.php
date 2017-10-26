@@ -34,12 +34,11 @@ class DatabaseSeeder extends Seeder
             $bram->skills()->save($skill);
         }
 
-        $dateStart = Carbon::now();
-        $dateEnd = $dateStart->addHour();
+        $dateStart = Carbon::create()->toDateTimeString();
+        $dateEnd = Carbon::create()->addHour(2)->toDateTimeString();
 
-
-        $bram->terminals()->attach($node->id,['start_time' => $dateStart, 'stop_time' =>$dateEnd ]);
-        $manu->terminals()->attach($bu->id,['start_time' => $dateStart, 'stop_time' =>$dateEnd ]);
+        $bram->terminals()->attach($node->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
+        $manu->terminals()->attach($bu->id,  ['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => '2ème étage' ]);
         
         
         

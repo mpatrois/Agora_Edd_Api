@@ -25,7 +25,10 @@ class CreateUserTerminalTable extends Migration
             $table->dateTime('start_time');
             $table->dateTime('stop_time');
             
-            $table->timestamps();
+            $table->string('place');
+            
+            // $table->timestamps();
+            
         });
     }
 
