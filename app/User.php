@@ -31,4 +31,9 @@ class User extends Authenticatable
     public function skills(){
         return $this->belongsToMany('App\Skill');
     }
+
+    public function terminals(){
+        return $this->belongsToMany('App\Terminal', 'user_terminal', 'terminal_id', 'user_id');
+    }
+
 }

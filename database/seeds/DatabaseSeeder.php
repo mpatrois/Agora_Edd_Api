@@ -6,6 +6,7 @@ use App\Skill;
 use App\Terminal;
 use App\User;
 use App\Question;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,8 +23,8 @@ class DatabaseSeeder extends Seeder
         Skill::create(['name' => 'Physique-Chimie',]);
         Skill::create(['name' => 'Mathématiques',]);
         
-        Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
-        Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
+        $node = Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
+        $bu   = Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
 
         $bram = User::create(['first_name' => 'Bram','last_name' => 'Bram Van Osta', 'password' => 'motdepasse']);
         $manu = User::create(['first_name' => 'Manu','last_name' => 'Patrois', 'password' => 'motdepasse']);
@@ -32,6 +33,13 @@ class DatabaseSeeder extends Seeder
             $manu->skills()->save($skill);
             $bram->skills()->save($skill);
         }
+
+        $dateStart = Carbon::now();
+        $dateEnd = $dateStart->addHour();
+
+
+        $bram->terminals()->attach($node->id,['start_time' => $dateStart, 'stop_time' =>$dateEnd ]);
+        $manu->terminals()->attach($bu->id,['start_time' => $dateStart, 'stop_time' =>$dateEnd ]);
         
         
         

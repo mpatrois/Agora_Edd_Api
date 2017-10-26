@@ -23,7 +23,7 @@ class CreateUserTerminalTable extends Migration
             $table->foreign('terminal_id')->references('id')->on('terminals');
 
             $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->dateTime('stop_time');
             
             $table->timestamps();
         });
