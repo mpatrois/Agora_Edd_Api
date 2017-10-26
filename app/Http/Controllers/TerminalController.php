@@ -107,6 +107,9 @@ class TerminalController extends Controller
         switch ($request->question_id){
             case Question::QU_WHATS_YOUR_NAME: return $this->setUserName($request);break;
             case Question::QU_HOW_MANY_HOURS:  return $this->setHours($request);break;
+            case Question::QU_WHAT_PLACE:      return $this->setPlace($request);break;
+            case Question::QU_MAKE_SMILE:      return $this->setPhoto($request);break;
+            // case Question::QU_HOW_CAN_I_HELP:  return $this->setPlace($request);break;
         }
         return $this->initChatBot($request);
      }
@@ -114,15 +117,15 @@ class TerminalController extends Controller
     
     private function initChatBot(Request $request){
         $user = new User();
-        $terminal = Terminal::find(1);
-        // $terminal = Terminal::find($request->terminal_id);
+        $terminal = Terminal::find(1); //Terminal::find($request->terminal_id);
 
         $user->save();
-        $user->terminals()->attach($terminal->id,  ['start_time' => null, 'stop_time' => null, 'place' => '2ème étage' ]);
-
+        $user->terminals()->attach($terminal->id,  ['start_time' => Carbon::now()]);
+        
         return [
             'user'     => $user,
             'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
             'key'      => Question::QU_WHATS_YOUR_NAME,
             'bubbles'  => [
                 [
@@ -145,6 +148,7 @@ class TerminalController extends Controller
         return [
             'user'     => $user,
             'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
             'key'      => Question::QU_HOW_MANY_HOURS,
             'bubbles'  => [
                 [
@@ -155,37 +159,76 @@ class TerminalController extends Controller
         ];
     }
     
-    private function setPlace(Request $request){
-        $user = new User($request->all());
-
-        $user->terminals()->attach( $terminal->id,['start_time' => Carbon::create() ] );
-        
-
-        return [
-            'user' => $user,
-            "nextQuestion" => Question::find(Question::QU_WHAT_PLACE),
-            "answers" => [
-                'En haut',
-                'Table 3',
-                'Au bar'
-            ]
-        ];
-    }
-
     private function setHours(Request $request){
-        $user = new User($request->all());
-
-        $user->terminals()->attach( $terminal->id,['start_time' => Carbon::create() ] );
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+        
+        $user->updateUserStopTime($request->nb_minutes);
 
         return [
-            'user' => $user,
-            "nextQuestion" => Question::find(Question::QU_WHAT_PLACE),
-            "answers" => [
-                'En haut',
-                'Table 3',
-                'Au bar'
+            'user'     => $user,
+            'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
+            "key"      => Question::QU_WHAT_PLACE,
+            'bubbles'  => [
+                [
+                    'type' => "SELECT",
+                    'content' => "A quel endroit ?",
+                    'options' => [
+                        '1 er étage',
+                        '2 ème étage',
+                        'Table 1',
+                        'Table 2',
+                    ]
+                ]
             ]
         ];
     }
+    
+    private function setPlace(Request $request){
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+        
+        $user->updateUserPlace($request->place);
+        
+        return [
+            'user'     => $user,
+            'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
+            "key"      => Question::QU_MAKE_SMILE,
+            'bubbles'  => [
+                [
+                    'type' => "TEXT",
+                    'content' => "Fais nous ton plus beau sourire !",
+                    'options' => []
+                ]
+            ]
+        ];
+    }
+
+    private function setPhoto(Request $request){
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+        
+        return [
+            'user'     => $user,
+            'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
+            "key"      => Question::QU_HOW_CAN_I_HELP,
+            'bubbles'  => [
+                [
+                    'type' => "SELECT",
+                    'content' => "Comment puis-je t'aider ?",
+                    'options' => [
+                        'Je recherche des compétences',
+                        'Je propose mes compétences',
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    
+
 
 }

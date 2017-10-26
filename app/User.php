@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -33,7 +34,24 @@ class User extends Authenticatable
     }
 
     public function terminals(){
-        return $this->belongsToMany('App\Terminal', 'user_terminal','user_id','terminal_id');
+        return $this->belongsToMany('App\Terminal', 'user_terminal','user_id','terminal_id')->withPivot("start_time","stop_time","place");
     }
+
+    public function currentTerminal(){
+        return $this->terminals()->latest()->first();
+    }
+
+    public function updateUserStopTime($nbMinutes){
+        $startTime = $this->currentTerminal()->pivot->start_time;
+        $stopTime = Carbon::parse($startTime);
+        $stopTime->addMinutes($nbMinutes);
+
+        $this->terminals()->updateExistingPivot($this->currentTerminal()->id, ['stop_time' => $stopTime ]);
+    }
+
+    public function updateUserPlace($place){
+        $this->terminals()->updateExistingPivot($this->currentTerminal()->id, ['place' => $place ]);
+    }
+
 
 }
