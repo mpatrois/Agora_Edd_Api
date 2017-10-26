@@ -184,11 +184,23 @@ class TerminalController extends Controller
             "key_name" => "QU_WHAT_PLACE",
             'type'     => "SELECT",
             'options' => [
-                '1 er étage',
-                '2 ème étage',
-                'Table 1',
-                'Table 2',
-                'Space X',
+                [
+                    'option_id'=> 1,
+                    'name' => 'Zone A',
+                ],
+                [
+                    'option_id'=> 2,
+                    'name' => 'Zone B',
+                ],
+                [
+                    'option_id'=> 3,
+                    'name' => 'Zone C',
+                ],
+                // '1 er étage',
+                // '2 ème étage',
+                // 'Table 1',
+                // 'Table 2',
+                // 'Space X',
             ],
             'bubbles'  => [
                 [
@@ -213,7 +225,7 @@ class TerminalController extends Controller
             'session'  => $user->currentTerminal()->pivot,
             "key"      => Question::QU_MAKE_SMILE,
             "key_name" => "QU_MAKE_SMILE",
-            'type' => "TEXT",
+            'type' => "PICTURE",
             'bubbles'  => [
                 [
                     'content' => "C'est noté ! Et maintenant...",
@@ -315,7 +327,7 @@ class TerminalController extends Controller
             'session'  => $user->currentTerminal()->pivot,
             "key"      => Question::QU_PEOPLE_SKILLS_WANTED,
             "key_name" => "QU_PEOPLE_SKILLS_WANTED",
-            'type'     => "SELECT",
+            'type'     => "SELECT_USER",
             'options'  => $terminal->getUsersAvailableBySkills($request->response_data),
             'bubbles'  => [
                 [
