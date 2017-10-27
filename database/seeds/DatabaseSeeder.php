@@ -26,16 +26,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Skill::create(['name' => 'Photoshop',]);
+        Skill::create(['name' => 'Social Media Marketing',]);
         Skill::create(['name' => 'Développement Web',]);
         Skill::create(['name' => 'Droit des affaires',]);
-        Skill::create(['name' => 'Physique-Chimie',]);
-        Skill::create(['name' => 'Mathématiques',]);
-        Skill::create(['name' => 'C++',]);
-        Skill::create(['name' => 'Vente de te-shi sisi',]);
-        Skill::create(['name' => 'Ski',]);
-        Skill::create(['name' => 'Graffiti',]);
-        Skill::create(['name' => 'Massage avec happy-ending',]);
+        Skill::create(['name' => 'Développement mobile',]);
+        Skill::create(['name' => 'Cloud and Distribued Computing',]);
+        Skill::create(['name' => 'Recruiting',]);
+        Skill::create(['name' => 'Computer Graphics & Animation',]);
+        Skill::create(['name' => 'Storage Systems & Management',]);
+        Skill::create(['name' => 'Algorithm design',]);
+        Skill::create(['name' => 'Création graphique',]);
+        Skill::create(['name' => 'Web Marketing',]);
+        Skill::create(['name' => 'Web Design',]);
+        Skill::create(['name' => 'Expert SEO',]);
+        Skill::create(['name' => 'Management',]);
+        Skill::create(['name' => 'Personnal Branding',]);
         
         Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
         Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
@@ -56,7 +61,7 @@ class DatabaseSeeder extends Seeder
             Terminal::create(['name' => $faker->company, 'password' => 'motdepasse']);
         }
 
-        for ($i=0; $i < 70 ; $i++) {
+        for ($i=0; $i < 80 ; $i++) {
             $gender = rand(0,1) == 1 ? 'male' : 'female';
             User::create(['username' => $faker->name($gender), 'password' => 'motdepasse','avatar' => $this->avatarUrl($gender)]);
         }
@@ -75,7 +80,7 @@ class DatabaseSeeder extends Seeder
 
             $user->terminals()->attach($randTerminal->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
             
-            for ($i=0; $i < rand(1,4) ; $i++) { 
+            for ($i=0; $i < rand(1,2) ; $i++) { 
                 $randSkill = Skill::orderBy(DB::raw('RAND()'))->first();
                 $user->skills()->save($randSkill);
             }
