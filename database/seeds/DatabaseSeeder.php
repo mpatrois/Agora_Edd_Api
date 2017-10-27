@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
             $dateStart = Carbon::now();
             $dateEnd = Carbon::create()->addHour(2)->toDateTimeString();
 
-            $user->terminals()->attach($randTerminal->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
+            $user->terminals()->attach($randTerminal->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Zone jaune' ]);
             
             for ($i=0; $i < rand(1,3) ; $i++) { 
                 $randSkill = Skill::orderBy(DB::raw('RAND()'))->first();
