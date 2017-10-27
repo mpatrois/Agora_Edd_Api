@@ -116,7 +116,6 @@ class TerminalController extends Controller
             case Question::QU_SKILLS_POSTED:   return $this->postSkills($request);break;
             case Question::QU_PEOPLE_SKILLS_WANTED:   return $this->chooseUser($request);break;
             case Question::QU_TANKS_EDD:   return $this->endChat($request);break;
-            // case Question::QU_HOW_CAN_I_HELP:  return $this->setPlace($request);break;
         }
         return $this->initChatBot($request);
      }
@@ -176,6 +175,9 @@ class TerminalController extends Controller
         $terminal = Terminal::find($request->terminal_id);
         
         $user->updateUserStopTime($request->response_data);//Integer nbMinutes
+        
+        $time = date('h', mktime(0,$request->response_data));
+        $time.= " heures et ". date('i', mktime(0,$request->response_data));
 
         return [
             'user'     => $user,
@@ -197,15 +199,10 @@ class TerminalController extends Controller
                     'option_id'=> 3,
                     'name' => 'Zone C',
                 ],
-                // '1 er étage',
-                // '2 ème étage',
-                // 'Table 1',
-                // 'Table 2',
-                // 'Space X',
             ],
             'bubbles'  => [
                 [
-                    'content' => "$request->response_data minutes ! Vraiment pas mal !",
+                    'content' => "$time minutes ! Vraiment pas mal !",
                 ],
                 [
                     'content' => "Dans quelle zone peut-on te trouver ?",
@@ -358,7 +355,7 @@ class TerminalController extends Controller
             'type'     => "SELECT",
             'options' => [
                 [
-                    'option_id'=> Question::QU_TANKS_EDD,
+                    'option_id'=> $userToTalk->id,
                     'name' => 'Merci Edd',
                 ],
             ],
@@ -375,8 +372,6 @@ class TerminalController extends Controller
         $terminal = Terminal::find($request->terminal_id);
 
         $userToTalk = User::find($request->response_data);
-        $userToTalk->session = $userToTalk->currentTerminal()->pivot;
-        $placeToBe = $userToTalk->session->place;
 
         return [
             'user'     => $user,
@@ -385,7 +380,10 @@ class TerminalController extends Controller
             'type'     => "END",
             'bubbles'  => [
                 [
-                    'content' => "Pas de problème $user->username, je gère les bails !",
+                    'content' => "Ravis d'avoir pu t'aider ! J'espère que $userToTalk->username pourras t'aider",
+                ],
+                [
+                    'content' => "Pense à télécharger l'application Agora ! Merci et à bientot dans l'agora",
                 ]
             ]
         ];

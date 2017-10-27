@@ -21,7 +21,7 @@ class Question extends Model
 
     const QU_PEOPLE_SKILLS_WANTED = 10;
 
-    const QU_TANKS_EDD = 10;
+    const QU_TANKS_EDD = 11;
 
     // static public function getContent(){
     //     $questions = [];

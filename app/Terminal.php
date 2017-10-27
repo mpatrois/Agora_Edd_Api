@@ -32,15 +32,26 @@ class Terminal extends Model
         
         
         $users = User::hydrate($usersList->toArray());
+        // $users->load('skills');
 
         foreach ($users as $user) {
             $user->session = $user->currentTerminal()->pivot;
             $user->option_id = $user->id;
             $stopTime = Carbon::parse($user->session->stop_time);
             $user->leavingPlaceIn =  $stopTime->diffForHumans();
+            
+            $user->load('skills');
+
+            foreach ($user->skills as $skill) {
+                if($skill->id == $idSkill){
+                    $skill->isSearched = true ;
+                }else{
+                    $skill->isSearched = false ;
+                }
+            }
         }
 
-        return $users->load('skills');
+        return $users;
 
     }
  
