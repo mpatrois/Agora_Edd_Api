@@ -398,7 +398,9 @@ class TerminalController extends Controller
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            'TYPE'    => 'END',
+            "key"      => Question::QU_TANKS_EDD,
+            "key_name" => "QU_TANKS_EDD",
+            'type'     => "SELECT",
             'options' => [
                 [
                     'option_id'=> $userToTalk->id,
@@ -439,7 +441,7 @@ class TerminalController extends Controller
             'type'     => "END",
             'bubbles'  => [
                 [
-                    'content' => "Ravis d'avoir pu t'aider ! J'espère que $userToTalk->username pourras t'aider",
+                    'content' => "Ravis d'avoir pu t'aider ! J'espère que tu vas trouver ce que tu cherches",
                 ],
                 [
                     'content' => "Pense à télécharger l'application Agora ! Merci et à bientot dans l'agora",
