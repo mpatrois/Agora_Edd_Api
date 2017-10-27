@@ -330,7 +330,7 @@ class TerminalController extends Controller
                         'content' => "Dans ce cas, dans quelle domaine souhaites-tu recevoir de l'aide ?",
                     ],
                     [
-                        'content' => "Ecris ce que tu cherches je vais t'aider !",
+                        'content' => "Écris ce que tu cherches je vais t'aider !",
                     ]
                 ]
             ];
