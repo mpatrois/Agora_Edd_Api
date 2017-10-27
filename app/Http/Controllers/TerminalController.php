@@ -158,22 +158,51 @@ class TerminalController extends Controller
         $user->username = $request->response_data;//String
         $user->save();
         
+        
         return [
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            'key'      => Question::QU_HOW_MANY_HOURS,
-            'key_name' => "QU_HOW_MANY_HOURS",
-            'type'     => "PROGRESS",
-            'bubbles'  => [
+            "key"      => Question::QU_HOW_CAN_I_HELP,
+            "key_name" => "QU_HOW_CAN_I_HELP",
+            'type'     => "SELECT",
+            'options' => [
                 [
-                    'content' => "Bienvenue à toi $user->username !"
+                    'option_id'=> Question::QU_OPTION_SEARCH_SKILLS,
+                    'name' => 'Je recherche des compétences',
                 ],
                 [
-                    'content' => "Combien de temps prévois-tu de rester ici ?"
+                    'option_id'=> Question::QU_OPTION_POST_SKILLS,
+                    'name' => 'Je partage mes compétences',
+                ],
+            ],
+            'bubbles'  => [
+                [
+                    'content' => "Parfait $user->username c'est noté !",
+                ]
+                ,[
+                    'content' => "Afin de faciliter les échanges, peux-tu me dire pourquoi tu es là ?",
                 ]
             ]
         ];
+
+        // return [
+        //     'user'     => $user,
+        //     'terminal' => $terminal,
+        //     'session'  => $user->currentTerminal()->pivot,
+        //     'key'      => Question::QU_HOW_MANY_HOURS,
+        //     'key_name' => "QU_HOW_MANY_HOURS",
+        //     'type'     => "PROGRESS",
+        //     'bubbles'  => [
+        //         [
+        //             'content' => "Bienvenue à toi $user->username !"
+        //         ],
+        //         [
+        //             'content' => "Combien de temps prévois-tu de rester ici ?"
+        //         ]
+        //     ]
+        // ];
+
     }
     
     private function setHours(Request $request){
@@ -189,9 +218,9 @@ class TerminalController extends Controller
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            "key"      => Question::QU_WHAT_PLACE,
-            "key_name" => "QU_WHAT_PLACE",
-            'type'     => "SELECT",
+            // "key"      => Question::QU_WHAT_PLACE,
+            // "key_name" => "QU_WHAT_PLACE",
+            'type'     => "END",
             'options' => [
                 [
                     'option_id'=> 1,
@@ -208,10 +237,7 @@ class TerminalController extends Controller
             ],
             'bubbles'  => [
                 [
-                    'content' => "$time ! Wahou ! tu bosses dûr !",
-                ],
-                [
-                    'content' => "Dans quelle zone peut-on te trouver ici ?",
+                    'content' => "C'est noté tu peux le retrouver dès que tu le souhaites!",
                 ]
             ]
         ];
@@ -223,22 +249,7 @@ class TerminalController extends Controller
         
         $user->updateUserPlace($request->response_data);//String name place
         
-        // return [
-        //     'user'     => $user,
-        //     'terminal' => $terminal,
-        //     'session'  => $user->currentTerminal()->pivot,
-        //     "key"      => Question::QU_MAKE_SMILE,
-        //     "key_name" => "QU_MAKE_SMILE",
-        //     'type' => "PICTURE",
-        //     'bubbles'  => [
-        //         [
-        //             'content' => "C'est noté ! Et maintenant...",
-        //         ],
-        //         [
-        //             'content' => "Fais nous ton plus beau sourire ! Cette pho",
-        //         ]
-        //     ]
-        // ];
+        
         return [
             'user'     => $user,
             'terminal' => $terminal,
@@ -316,7 +327,10 @@ class TerminalController extends Controller
                 'name_search' => 'search_skill',
                 'bubbles'  => [
                     [
-                        'content' => "Quelle compétence cherches-tu ? Tape quelques lettres pour trouver ce dont tu as besoin !",
+                        'content' => "Dans ce cas, dans quelle domaine souhaites-tu recevoir de l'aide ?",
+                    ],
+                    [
+                        'content' => "Commence à taper ce que tu cherches nous allons t'aider !",
                     ]
                 ]
             ];
@@ -361,7 +375,7 @@ class TerminalController extends Controller
             'options'  => $terminal->getUsersAvailableBySkills($request->response_data),
             'bubbles'  => [
                 [
-                    'content' => "Voici une liste de personnes qui peuvent t'interesser !",
+                    'content' => "Très bien $user->name, voici les Edders qui peuvent t'aider !",
                 ]
             ]
             
@@ -382,9 +396,7 @@ class TerminalController extends Controller
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            "key"      => Question::QU_TANKS_EDD,
-            "key_name" => "QU_TANKS_EDD",
-            'type'     => "SELECT",
+            'TYPE'    => 'END',
             'options' => [
                 [
                     'option_id'=> $userToTalk->id,
@@ -393,18 +405,21 @@ class TerminalController extends Controller
             ],
             'bubbles'  => [
                 [
-                    'content' => "Voici $userToTalk->username !",
+                    'content' => "Parfait tu peux retrouver $userToTalk->username ici : $placeToBe  👍!",
                 ],
                 [
-                    'content' => "Tu peux aller lui parler !",
-                ],
-                [
-                    'content' => "Voila sa place dans le batiment : $placeToBe",
+                    'content' => "N'hésite pas à le solliciter !",
                 ],
                 [
                     'content' => "",
                     'url_avatar' => $userToTalk->avatar
-                ]
+                ],
+                // [
+                //     'content' => "Combien de temps prévoit tu de rester ici ?",
+                // ],
+                // [
+                //     'content' => "Utilise le slider pour spécifier la durée ?",
+                // ],
             ]
         ];
     }

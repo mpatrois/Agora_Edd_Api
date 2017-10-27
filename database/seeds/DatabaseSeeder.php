@@ -30,17 +30,17 @@ class DatabaseSeeder extends Seeder
         Skill::create(['name' => 'Développement Web',]);
         Skill::create(['name' => 'Droit des affaires',]);
         Skill::create(['name' => 'Développement mobile',]);
-        Skill::create(['name' => 'Cloud and Distribued Computing',]);
+        Skill::create(['name' => 'Cloud and Distributed Computing',]);
         Skill::create(['name' => 'Recruiting',]);
         Skill::create(['name' => 'Computer Graphics & Animation',]);
-        Skill::create(['name' => 'Storage Systems & Management',]);
-        Skill::create(['name' => 'Algorithm design',]);
+        // Skill::create(['name' => 'Storage Systems & Management',]);
+        // Skill::create(['name' => 'Algorithm design',]);
         Skill::create(['name' => 'Création graphique',]);
         Skill::create(['name' => 'Web Marketing',]);
         Skill::create(['name' => 'Web Design',]);
-        Skill::create(['name' => 'Expert SEO',]);
+        // Skill::create(['name' => 'Expert SEO',]);
         Skill::create(['name' => 'Management',]);
-        Skill::create(['name' => 'Personnal Branding',]);
+        // Skill::create(['name' => 'Personnal Branding',]);
         
         Terminal::create(['name' => 'Node Bordeaux','password' => 'motdepasse']);
         Terminal::create(['name' => 'BU Talence','password' => 'motdepasse']);
@@ -57,19 +57,14 @@ class DatabaseSeeder extends Seeder
 
         $faker = Faker\Factory::create();
 
-        for ($i=0; $i < 5 ; $i++) {
+        for ($i=0; $i < 2 ; $i++) {
             Terminal::create(['name' => $faker->company, 'password' => 'motdepasse']);
         }
 
-        for ($i=0; $i < 80 ; $i++) {
+        for ($i=0; $i < 100 ; $i++) {
             $gender = rand(0,1) == 1 ? 'male' : 'female';
             User::create(['username' => $faker->name($gender), 'password' => 'motdepasse','avatar' => $this->avatarUrl($gender)]);
         }
-
-        // foreach(Skill::all() as $skill){
-        //     $manu->skills()->save($skill);
-        //     $bram->skills()->save($skill);
-        // }
 
         foreach(User::all() as $user){
 
@@ -80,7 +75,7 @@ class DatabaseSeeder extends Seeder
 
             $user->terminals()->attach($randTerminal->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Table 3' ]);
             
-            for ($i=0; $i < rand(1,2) ; $i++) { 
+            for ($i=0; $i < rand(1,3) ; $i++) { 
                 $randSkill = Skill::orderBy(DB::raw('RAND()'))->first();
                 $user->skills()->save($randSkill);
             }
