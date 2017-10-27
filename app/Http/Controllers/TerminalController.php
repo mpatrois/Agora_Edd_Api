@@ -114,7 +114,8 @@ class TerminalController extends Controller
             case Question::QU_HOW_CAN_I_HELP:  return $this->makeChoice($request);break;
             case Question::QU_SKILLS_WANTED:   return $this->selectSkills($request);break;
             case Question::QU_SKILLS_POSTED:   return $this->postSkills($request);break;
-            case Question::QU_PEOPLE_SKILLS_WANTED:   return $this->choosePeople($request);break;
+            case Question::QU_PEOPLE_SKILLS_WANTED:   return $this->chooseUser($request);break;
+            case Question::QU_TANKS_EDD:   return $this->endChat($request);break;
             // case Question::QU_HOW_CAN_I_HELP:  return $this->setPlace($request);break;
         }
         return $this->initChatBot($request);
@@ -340,24 +341,51 @@ class TerminalController extends Controller
 
     }
     
-    public function choosePeople(Request $request){
+    public function chooseUser(Request $request){
         $user = User::find($request->user_id);
         $terminal = Terminal::find($request->terminal_id);
 
         $userToTalk = User::find($request->response_data);
         $userToTalk->session = $userToTalk->currentTerminal()->pivot;
+        $placeToBe = $userToTalk->session->place;
 
         return [
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            "key"      => Question::QU_PEOPLE_SKILLS_WANTED,
-            "key_name" => "QU_PEOPLE_SKILLS_WANTED",
+            "key"      => Question::QU_TANKS_EDD,
+            "key_name" => "QU_TANKS_EDD",
             'type'     => "SELECT",
-            'options' => $terminal->getUsersAvailableBySkills($request->response_data),
+            'options' => [
+                [
+                    'option_id'=> Question::QU_TANKS_EDD,
+                    'name' => 'Merci Edd',
+                ],
+            ],
             'bubbles'  => [
                 [
-                    'content' => "Voici $user->username ! tu peux aller lui parler, il se trouve à cet endroit : $userToTalk->session->place",
+                    'content' => "Voici $user->username ! tu peux aller lui parler, il se trouve à cet endroit : $placeToBe",
+                ]
+            ]
+        ];
+    }
+
+    public function endChat(Request $request){
+        $user = User::find($request->user_id);
+        $terminal = Terminal::find($request->terminal_id);
+
+        $userToTalk = User::find($request->response_data);
+        $userToTalk->session = $userToTalk->currentTerminal()->pivot;
+        $placeToBe = $userToTalk->session->place;
+
+        return [
+            'user'     => $user,
+            'terminal' => $terminal,
+            'session'  => $user->currentTerminal()->pivot,
+            'type'     => "END",
+            'bubbles'  => [
+                [
+                    'content' => "Pas de problème $user->username, je gère les bails !",
                 ]
             ]
         ];
