@@ -178,7 +178,7 @@ class TerminalController extends Controller
             ],
             'bubbles'  => [
                 [
-                    'content' => "Parfait $user->username c'est noté !",
+                    'content' => "Parfait, $user->username c'est noté !",
                 ]
                 ,[
                     'content' => "Afin de faciliter les échanges, peux-tu me dire pourquoi tu es là ?",
@@ -237,7 +237,7 @@ class TerminalController extends Controller
             ],
             'bubbles'  => [
                 [
-                    'content' => "C'est noté tu peux le retrouver dès que tu le souhaites!",
+                    'content' => "C'est noté, tu peux le retrouver dès que tu le souhaites!",
                 ]
             ]
         ];
@@ -330,7 +330,7 @@ class TerminalController extends Controller
                         'content' => "Dans ce cas, dans quelle domaine souhaites-tu recevoir de l'aide ?",
                     ],
                     [
-                        'content' => "Écris ce que tu cherches je vais t'aider !",
+                        'content' => "Écris ce que tu cherches, je vais t'aider !",
                     ]
                 ]
             ];
@@ -441,10 +441,10 @@ class TerminalController extends Controller
             'type'     => "END",
             'bubbles'  => [
                 [
-                    'content' => "Ravis d'avoir pu t'aider ! J'espère que tu vas trouver ce que tu cherches",
+                    'content' => "Ravi d'avoir pu t'aider ! J'espère que tu vas trouver ce que tu cherches",
                 ],
                 [
-                    'content' => "Pense à télécharger l'application Agora ! Merci et à bientot dans l'agora",
+                    'content' => "Pense à télécharger l'application Agora ! Merci et à bientôt.",
                 ]
             ]
         ];
