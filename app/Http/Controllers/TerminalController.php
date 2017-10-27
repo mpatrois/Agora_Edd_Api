@@ -375,7 +375,7 @@ class TerminalController extends Controller
             'options'  => $terminal->getUsersAvailableBySkills($request->response_data),
             'bubbles'  => [
                 [
-                    'content' => "Très bien $user->name, voici les Edders qui peuvent t'aider !",
+                    'content' => "Très bien $user->name, voici les Edders susceptibles de t'intéresser !",
                 ]
             ]
             
