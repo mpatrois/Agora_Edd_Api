@@ -28,6 +28,7 @@ class Terminal extends Model
             ->where('user_terminal.terminal_id',$this->id)
             ->where('skill_user.skill_id',  $idSkill)
             ->groupBy('users.id')
+            ->limit(3)
             ->get();
         
         

@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
             Terminal::create(['name' => $faker->company, 'password' => 'motdepasse']);
         }
 
-        for ($i=0; $i < 100 ; $i++) {
+        for ($i=0; $i < 140 ; $i++) {
             $gender = rand(0,1) == 1 ? 'male' : 'female';
             User::create(['username' => $faker->name($gender), 'password' => 'motdepasse','avatar' => $this->avatarUrl($gender), 'gender' => $gender ] );
         }
@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder
 
             $user->terminals()->attach($randTerminal->id,['start_time' => $dateStart, 'stop_time' => $dateEnd, 'place' => 'Zone jaune' ]);
             
-            for ($i=0; $i < rand(1,3) ; $i++) { 
+            for ($i=0; $i < rand(1,2) ; $i++) { 
                 $randSkill = Skill::orderBy(DB::raw('RAND()'))->first();
                 $user->skills()->save($randSkill);
             }
