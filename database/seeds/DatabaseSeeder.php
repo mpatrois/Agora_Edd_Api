@@ -47,13 +47,13 @@ class DatabaseSeeder extends Seeder
 
         
 
-        User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
-        User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
-        User::create(['username' => 'Valentin Dupond', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
-        User::create(['username' => 'Yann Bertrand', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
-        User::create(['username' => 'Florence Dubosc', 'password' => 'motdepasse','avatar' => $this->avatarUrl('female')]);
-        User::create(['username' => 'Yannick Tamers-Lachiaine', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
-        User::create(['username' => 'Cristhopher Wallace', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
+        User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male") , 'gender' => 'male' ]);
+        User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male") , 'gender' => 'male' ]);
+        User::create(['username' => 'Valentin Dupond', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male") , 'gender' => 'male' ]);
+        User::create(['username' => 'Yann Bertrand', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male") , 'gender' => 'male' ]);
+        User::create(['username' => 'Florence Dubosc', 'password' => 'motdepasse','avatar' => $this->avatarUrl('female') , 'gender' => 'female' ]);
+        User::create(['username' => 'Yannick Tamers-Lachiaine', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male") , 'gender' => 'male' ]);
+        User::create(['username' => 'Cristhopher Wallace', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male") , 'gender' => 'male' ]);
 
         $faker = Faker\Factory::create();
 
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
 
         for ($i=0; $i < 100 ; $i++) {
             $gender = rand(0,1) == 1 ? 'male' : 'female';
-            User::create(['username' => $faker->name($gender), 'password' => 'motdepasse','avatar' => $this->avatarUrl($gender)]);
+            User::create(['username' => $faker->name($gender), 'password' => 'motdepasse','avatar' => $this->avatarUrl($gender), 'gender' => $gender ] );
         }
 
         foreach(User::all() as $user){

@@ -330,7 +330,7 @@ class TerminalController extends Controller
                         'content' => "Dans ce cas, dans quelle domaine souhaites-tu recevoir de l'aide ?",
                     ],
                     [
-                        'content' => "Commence à taper ce que tu cherches nous allons t'aider !",
+                        'content' => "Ecris ce que tu cherches je vais t'aider !",
                     ]
                 ]
             ];
@@ -392,6 +392,8 @@ class TerminalController extends Controller
         $userToTalk->session = $userToTalk->currentTerminal()->pivot;
         $placeToBe = $userToTalk->session->place;
 
+        $leOuLa = $userToTalk->gender == 'male' ? 'le' : 'la';
+
         return [
             'user'     => $user,
             'terminal' => $terminal,
@@ -408,7 +410,7 @@ class TerminalController extends Controller
                     'content' => "Parfait tu peux retrouver $userToTalk->username ici : $placeToBe  👍!",
                 ],
                 [
-                    'content' => "N'hésite pas à le solliciter !",
+                    'content' => "N'hésite pas à $leOuLa solliciter !",
                 ],
                 [
                     'content' => "",
