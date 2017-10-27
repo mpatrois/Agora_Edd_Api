@@ -10,6 +10,15 @@ use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
+    private function avatarUrl($gender)
+    {
+        if($gender=="male"){
+            return "https://randomuser.me/api/portraits/men/".rand(1,30).".jpg";
+        }else{
+            return "https://randomuser.me/api/portraits/women/".rand(1,30).".jpg";
+        }
+    }
+
     /**
      * Run the database seeds.
      *
@@ -33,23 +42,23 @@ class DatabaseSeeder extends Seeder
 
         
 
-        User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse']);
-        User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse']);
-        User::create(['username' => 'Valentin Dupond', 'password' => 'motdepasse']);
-        User::create(['username' => 'Yann Bertrand', 'password' => 'motdepasse']);
-        User::create(['username' => 'Florence Dubosc', 'password' => 'motdepasse']);
-        User::create(['username' => 'Yannick Tamers-Lachiaine', 'password' => 'motdepasse']);
-        User::create(['username' => 'Popeye', 'password' => 'motdepasse']);
-        User::create(['username' => 'Cristhopher Wallace', 'password' => 'motdepasse']);
+        User::create(['username' => 'Bram Van Osta', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
+        User::create(['username' => 'Manu Patrois', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
+        User::create(['username' => 'Valentin Dupond', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
+        User::create(['username' => 'Yann Bertrand', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
+        User::create(['username' => 'Florence Dubosc', 'password' => 'motdepasse','avatar' => $this->avatarUrl('female')]);
+        User::create(['username' => 'Yannick Tamers-Lachiaine', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
+        User::create(['username' => 'Cristhopher Wallace', 'password' => 'motdepasse','avatar' => $this->avatarUrl("male")]);
 
         $faker = Faker\Factory::create();
 
-        for ($i=0; $i < 10 ; $i++) {
+        for ($i=0; $i < 5 ; $i++) {
             Terminal::create(['name' => $faker->company, 'password' => 'motdepasse']);
         }
 
-        for ($i=0; $i < 50 ; $i++) {
-            User::create(['username' => $faker->name, 'password' => 'motdepasse']);
+        for ($i=0; $i < 70 ; $i++) {
+            $gender = rand(0,1) == 1 ? 'male' : 'female';
+            User::create(['username' => $faker->name($gender), 'password' => 'motdepasse','avatar' => $this->avatarUrl($gender)]);
         }
 
         // foreach(Skill::all() as $skill){
