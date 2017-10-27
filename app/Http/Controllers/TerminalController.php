@@ -361,7 +361,7 @@ class TerminalController extends Controller
             ],
             'bubbles'  => [
                 [
-                    'content' => "Voici $user->username ! tu peux aller lui parler, il se trouve à cet endroit : $placeToBe",
+                    'content' => "Voici $userToTalk->username ! tu peux aller lui parler, il se trouve à cet endroit : $placeToBe",
                 ]
             ]
         ];
