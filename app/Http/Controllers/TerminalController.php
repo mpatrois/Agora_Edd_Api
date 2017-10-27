@@ -110,7 +110,7 @@ class TerminalController extends Controller
             case Question::QU_WHATS_YOUR_NAME: return $this->setUserName($request);break;
             case Question::QU_HOW_MANY_HOURS:  return $this->setHours($request);break;
             case Question::QU_WHAT_PLACE:      return $this->setPlace($request);break;
-            case Question::QU_MAKE_SMILE:      return $this->setPhoto($request);break;
+            // case Question::QU_MAKE_SMILE:      return $this->setPhoto($request);break;
             case Question::QU_HOW_CAN_I_HELP:  return $this->makeChoice($request);break;
             case Question::QU_SKILLS_WANTED:   return $this->selectSkills($request);break;
             case Question::QU_SKILLS_POSTED:   return $this->postSkills($request);break;
@@ -137,8 +137,14 @@ class TerminalController extends Controller
             'type'     => "TEXT",
             'bubbles'  => [
                 [
-                    'content' => "Salut, je suis Edd! Je suis là pour faciliter les échanges et les rencontres dans cet espace. Comment t'appelles tu ?"
-                ]
+                    'content' => "Salut, je suis Edd ! 😃"
+                ],
+                [
+                    'content' => "Je suis là pour t’aider à être mis en relation avec un Edder."
+                ],
+                [
+                    'content' => "Comment t’appelles-tu ?"
+                ],
 
             ]
         ];
@@ -164,7 +170,7 @@ class TerminalController extends Controller
                     'content' => "Bienvenue à toi $user->username !"
                 ],
                 [
-                    'content' => "Combien de temps resteras tu dans cet espace ?"
+                    'content' => "Combien de temps prévois-tu de rester ici ?"
                 ]
             ]
         ];
@@ -177,7 +183,7 @@ class TerminalController extends Controller
         $user->updateUserStopTime($request->response_data);//Integer nbMinutes
         
         $time = date('h', mktime(0,$request->response_data));
-        $time.= " heures et ". date('i', mktime(0,$request->response_data));
+        $time.= " heures et ". date('i', mktime(0,$request->response_data)) ." minutes";
 
         return [
             'user'     => $user,
@@ -202,10 +208,10 @@ class TerminalController extends Controller
             ],
             'bubbles'  => [
                 [
-                    'content' => "$time minutes ! Vraiment pas mal !",
+                    'content' => "$time ! Wahou ! tu bosses dûr !",
                 ],
                 [
-                    'content' => "Dans quelle zone peut-on te trouver ?",
+                    'content' => "Dans quelle zone peut-on te trouver ici ?",
                 ]
             ]
         ];
@@ -217,19 +223,45 @@ class TerminalController extends Controller
         
         $user->updateUserPlace($request->response_data);//String name place
         
+        // return [
+        //     'user'     => $user,
+        //     'terminal' => $terminal,
+        //     'session'  => $user->currentTerminal()->pivot,
+        //     "key"      => Question::QU_MAKE_SMILE,
+        //     "key_name" => "QU_MAKE_SMILE",
+        //     'type' => "PICTURE",
+        //     'bubbles'  => [
+        //         [
+        //             'content' => "C'est noté ! Et maintenant...",
+        //         ],
+        //         [
+        //             'content' => "Fais nous ton plus beau sourire ! Cette pho",
+        //         ]
+        //     ]
+        // ];
         return [
             'user'     => $user,
             'terminal' => $terminal,
             'session'  => $user->currentTerminal()->pivot,
-            "key"      => Question::QU_MAKE_SMILE,
-            "key_name" => "QU_MAKE_SMILE",
-            'type' => "PICTURE",
-            'bubbles'  => [
+            "key"      => Question::QU_HOW_CAN_I_HELP,
+            "key_name" => "QU_HOW_CAN_I_HELP",
+            'type'     => "SELECT",
+            'options' => [
                 [
-                    'content' => "C'est noté ! Et maintenant...",
+                    'option_id'=> Question::QU_OPTION_SEARCH_SKILLS,
+                    'name' => 'Je recherche des compétences',
                 ],
                 [
-                    'content' => "Fais nous ton plus beau sourire !",
+                    'option_id'=> Question::QU_OPTION_POST_SKILLS,
+                    'name' => 'Je partage mes compétences',
+                ],
+            ],
+            'bubbles'  => [
+                [
+                    'content' => "Parfait $user->name c'est noté ! ",
+                ]
+                ,[
+                    'content' => "Peux-tu me dire pourquoi tu es là ?",
                 ]
             ]
         ];
